@@ -10,6 +10,7 @@ realTimeClock rtc;
 void setup() 
 {
   Serial.begin(9600);
+  rtc.setUp();
 
   Surenoo.init();
   Surenoo.clearlcd();
@@ -36,7 +37,7 @@ void loop()
        {
         Serial.println("Hour");
         rtc.setHoursOrMinute('H');
-       break;
+        break;
        }
     case 1 :
       {
@@ -47,14 +48,18 @@ void loop()
     case 2 :
       {
        Serial.println("AM/PM Selection");
-       rtc.dayNightIndicator();  
+       rtc.dayNightIndicator();
+       rtc.updateTime();  
        break;
       }
     default:
-       {
+       { 
+        rtc.loop(); 
         Serial.println("Done");
         break;
-       }    
+       }   
+       
+        
   }
 }
 
