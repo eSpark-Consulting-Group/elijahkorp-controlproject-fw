@@ -12,7 +12,21 @@
 
 #define SET_BUTTON PB10      // latch 3
 #define SET_BUTTON_LED PB11  // led
-
+// namespace set
+// {
+//   typedef enum
+//   {
+//     realTimeHour=0,
+//     realTimeMinute,
+//     realTimePeriod,
+//     ledOnTimeHour,
+//     ledOnTimeMinute,
+//     ledOnTimePeriod,
+//     ledOffTimeHour,
+//     ledOffTimeMinute,
+//     ledOffTimePeriod,
+//   }setButton;
+// }
 class Button
 {
   public:
@@ -23,7 +37,7 @@ class Button
     Button();
     void positive(char time_nature);
     void negative(char time_nature); 
-    uint8_t set(); 
+    int set(); 
 };
 extern SURENOO Surenoo;
 extern Button button; 

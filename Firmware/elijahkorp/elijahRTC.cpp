@@ -25,7 +25,7 @@ void realTimeClock::loop()
     snprintf(realtime, sizeof(realtime), "%02d:%02d:%02d:%2s", hrs, mn, sec,periodToString(period));
     morningPeriod(realtime);
     nightPeriod(realtime);  
-    Serial.println(realtime);
+    // Serial.println(realtime);
     Surenoo.setCursorlcd(0, 0);
     Surenoo.print("Redible Wall");
     Surenoo.setCursorlcd(0, 1);
@@ -46,8 +46,26 @@ void realTimeClock::updateTime()
 
 void realTimeClock::setLightOn()
 {
-    updateTime();
-    // snprintf();
+    minutes = button.minuteCount;
+    hours = button.hourCount;
+    if (strcmp(amPmDayNight, "AM") == 0)
+      period = STM32RTC::AM;
+    if (strcmp(amPmDayNight, "PM") == 0)
+      period = STM32RTC::PM;
+    snprintf(lightOntime, sizeof(lightOntime), "%02d:%02d:%02d:%2s", hours, minutes, seconds,periodToString(period));
+    Serial.println(lightOntime);
+}
+
+void realTimeClock::setLightOff()
+{
+    minutes = button.minuteCount;
+    hours = button.hourCount;
+    if (strcmp(amPmDayNight, "AM") == 0)
+      period = STM32RTC::AM;
+    if (strcmp(amPmDayNight, "PM") == 0)
+      period = STM32RTC::PM;
+    snprintf(lightOfftime, sizeof(lightOntime), "%02d:%02d:%02d:%2s", hours, minutes, seconds,periodToString(period));
+    Serial.println(lightOfftime);
 }
 
 

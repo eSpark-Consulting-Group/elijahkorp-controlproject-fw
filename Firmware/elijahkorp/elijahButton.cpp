@@ -108,7 +108,7 @@ void Button::negative(char time_nature)
   }
 }
 
-uint8_t Button::set() 
+int Button::set() 
 {
   //   // Check if the button is pressed
   
@@ -125,5 +125,12 @@ uint8_t Button::set()
   {
     digitalWrite(SET_BUTTON_LED, HIGH);  // Turn on LED
   }
+  // for (int i=0 ;i <=setButtonCount ; i++)
+  // {
+  //   if (setButtonCount == i)
+  //   {
+  //     return button = (setButton)i;
+  //   }
+  // }
   return setButtonCount;
 }

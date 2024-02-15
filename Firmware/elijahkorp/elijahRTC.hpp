@@ -23,6 +23,7 @@ class realTimeClock
     void loop();
     void updateTime();
     void setLightOn();
+    void setLightOff();
     void setHoursOrMinute(char time_nature);
     void dayNightIndicator();
 };
