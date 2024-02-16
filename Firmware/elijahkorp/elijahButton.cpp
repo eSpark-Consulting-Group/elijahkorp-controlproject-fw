@@ -18,7 +18,17 @@ Button::Button()
 
   pinMode(SET_BUTTON, INPUT);
   pinMode(SET_BUTTON_LED, OUTPUT);
+
+  pinMode(LIGHT_BUTTON, INPUT);
+  pinMode(LIGHT_BUTTON_LED, OUTPUT);
+
+  pinMode(PUMP_BUTTON, INPUT);
+  pinMode(PUMP_BUTTON_LED, OUTPUT);
+
+  pinMode(RELAY_1, OUTPUT);
+  pinMode(RELAY_2, OUTPUT);
 }
+
 void Button::positive(char time_nature) 
 {
   if (digitalRead(POSITIVE_BUTTON) == LOW) 
@@ -29,13 +39,20 @@ void Button::positive(char time_nature)
       if (time_nature == 'H')
       {
         hourCount++;
+        Serial.println("Hour incremented");
+        digitalWrite(SET_BUTTON_LED, LOW);  // Turn on Set button LED
         if (hourCount> 12)
           {
             hourCount = 0;
             Surenoo.setCursorlcd(0, 1);
             Surenoo.print(0);
-          } 
-        Serial.println("Hour incremented");
+          }
+          // if (isSetButtonPressed())
+          //   {
+          //     Serial.println("++++++++++++++++++++++++++++++++++++++++++");
+          //     digitalWrite(SET_BUTTON_LED, LOW);  // Turn on Set button LED
+          //   } 
+        
       }
       else if (time_nature == 'M')
       {
@@ -46,6 +63,7 @@ void Button::positive(char time_nature)
               Surenoo.setCursorlcd(3, 1);
               Surenoo.print(0);
             }
+        
         Serial.println("Minute incremented");
       }
       else
@@ -54,11 +72,11 @@ void Button::positive(char time_nature)
         return;
       }
     }
-    digitalWrite(POSITIVE_BUTTON_LED, LOW);  // Turn off LED
+    digitalWrite(POSITIVE_BUTTON_LED, LOW);  // Turn On LED
   } 
   else 
   {
-    digitalWrite(POSITIVE_BUTTON_LED, HIGH);  // Turn on LED
+    digitalWrite(POSITIVE_BUTTON_LED, HIGH);  // Turn OFF Button+ LED
   }
 }
 
@@ -104,18 +122,40 @@ void Button::negative(char time_nature)
   } 
   else 
   {
-    digitalWrite(NEGATIVE_BUTTON_LED, HIGH);  // Turn on LED
+    
+    
+    digitalWrite(NEGATIVE_BUTTON_LED, HIGH);  // Turn on Button- LED
   }
+}
+
+bool Button::isSetButtonPressed() 
+{
+  static bool wasPressed = false;
+  bool isPressed = (digitalRead(SET_BUTTON) == LOW);
+
+  if (isPressed && !wasPressed) 
+  {
+    // Button was just pressed
+    digitalWrite(SET_BUTTON_LED, HIGH); // Turn on LED
+  }
+  else if (!isPressed && wasPressed) 
+  {
+    // Button was just released
+    digitalWrite(SET_BUTTON_LED, LOW); // Turn off LED
+  }
+
+  wasPressed = isPressed; // Remember the button state for the next iteration
+  return isPressed;
 }
 
 int Button::set() 
 {
-  //   // Check if the button is pressed
+  // Check if the button is pressed
   
   if (digitalRead(SET_BUTTON) == LOW) 
   {
     // Increment the count only if the button was not pressed previously (latching action)
-    if (digitalRead(SET_BUTTON_LED) == HIGH) 
+    if (digitalRead(SET_BUTTON_LED) == HIGH && !(digitalRead(POSITIVE_BUTTON) == LOW || digitalRead(NEGATIVE_BUTTON) == LOW)) 
     {
       setButtonCount ++;
     }
@@ -123,7 +163,7 @@ int Button::set()
   } 
   else 
   {
-    digitalWrite(SET_BUTTON_LED, HIGH);  // Turn on LED
+    digitalWrite(SET_BUTTON_LED, HIGH);  // Turn on Set button LED
   }
   // for (int i=0 ;i <=setButtonCount ; i++)
   // {

@@ -3,15 +3,24 @@
 
 STM32RTC::Hour_Format realTimeClock::hourFormat = STM32RTC::HOUR_24;
 STM32RTC::AM_PM realTimeClock::period = STM32RTC::PM;
+STM32RTC::AM_PM realTimeClock::realTimeperiod = STM32RTC::PM;
 STM32RTC& rtclock = STM32RTC::getInstance();
+
+// Define the on and off durations in milliseconds
+const unsigned long onDuration = 2500;   // 2.5 seconds
+const unsigned long offDuration = 7500;  // 7.5 seconds
+
+// Variables to track the state and timing
+bool pumpState = false;
+unsigned long lastChangeTime = 0;
 
 void realTimeClock::setUp()
 {
   Serial.println("RTC Init");
   rtclock.begin(hourFormat);
-  rtclock.setHours(hours, period);
-  rtclock.setMinutes(minutes);
-  rtclock.setSeconds(seconds);
+  rtclock.setHours(realTimehours, period);
+  rtclock.setMinutes(realTimeMinutes);
+  rtclock.setSeconds(realSeconds);
 }
 
 void realTimeClock::loop()
@@ -30,18 +39,28 @@ void realTimeClock::loop()
     Surenoo.print("Redible Wall");
     Surenoo.setCursorlcd(0, 1);
     Surenoo.print(realtime);
-     
+
+    // rtclock.getTime(&hrs, &mn, &sec, &subs);
+    // snprintf(realtime, sizeof(realtime), "%02d:%02d:%02d:%2s", hrs, mn, sec, periodToString(period));
+
+    // Check if it's time to toggle the pump relay
+     unsigned long currentTime = millis() / 1000; // Convert milliseconds to seconds
+     Serial.println(currentTime);
+
+    
+     turnOnLedRelay_2(realtime);
+     turnOffLedRelay_2(realtime);
+     pumpRelayOnandOffInterval();
 }
 
 void realTimeClock::updateTime()
 {
-    minutes = button.minuteCount;
-    hours = button.hourCount;
+    realTimeMinutes = button.minuteCount;
+    realTimehours = button.hourCount;
     if (strcmp(amPmDayNight, "AM") == 0)
-      period = STM32RTC::AM;
+      realTimeperiod = STM32RTC::AM;
     if (strcmp(amPmDayNight, "PM") == 0)
-      period = STM32RTC::PM;
-    setUp(); 
+      realTimeperiod = STM32RTC::PM;
 }
 
 void realTimeClock::setLightOn()
@@ -93,6 +112,45 @@ void realTimeClock::morningPeriod(char* realtime)
     }
 }
 
+void realTimeClock::turnOnLedRelay_2(char* realtime)
+{
+  if(strcmp(realtime, lightOntime) == 0)
+    {
+       digitalWrite(LIGHT_BUTTON_LED, LOW);
+       digitalWrite(RELAY_2, HIGH);
+       Serial.println("LED REALY ON:::");
+    }
+}
+
+void realTimeClock::turnOffLedRelay_2(char* realtime)
+{
+  if(strcmp(realtime, lightOfftime) == 0)
+    {
+       digitalWrite(LIGHT_BUTTON_LED, HIGH);
+       digitalWrite(RELAY_2, LOW);
+       Serial.println("LED REALY OFF:::");
+    }
+}
+
+void realTimeClock::pumpRelayOnandOffInterval() //// NOTE THIS SHOULD BE DONE BY USING RTC ******************WRONG*********************************
+{
+ unsigned long currentTime = millis();
+
+  if (pumpState && currentTime - lastChangeTime >= onDuration) 
+  {
+    Serial.println("2.5");
+    pumpState = false;
+    lastChangeTime = currentTime;
+  } 
+  else if (!pumpState && currentTime - lastChangeTime >= offDuration) 
+  {
+    pumpState = true;
+    lastChangeTime = currentTime;
+    Serial.println("7.5");
+  }
+  digitalWrite(RELAY_1, pumpState ? HIGH : LOW);
+}
+
 const char* realTimeClock::periodToString(STM32RTC::AM_PM period) 
 {
     switch (period) 
@@ -130,7 +188,7 @@ void realTimeClock::setHoursOrMinute(char time_nature)
 
   button.positive(time_nature);
   button.negative(time_nature);
-
+ 
   Serial.println(time_nature);
   if ((button.hourCount <= 9 && button.hourCount >= 0) && time_nature == 'H') 
   {

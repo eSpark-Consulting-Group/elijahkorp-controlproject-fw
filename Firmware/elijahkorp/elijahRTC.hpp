@@ -10,9 +10,14 @@ class realTimeClock
     char realtime[50];
     char lightOntime[50];
     char lightOfftime[50];
+    byte realTimeMinutes = 0;
+    byte realTimehours = 0;
+    
+    byte realSeconds = 0;
     byte seconds = 0;
-    byte minutes = 43;
-    byte hours = 3;
+    byte minutes = 0;
+    byte hours = 0;
+    static STM32RTC::AM_PM  realTimeperiod ;
     static STM32RTC::Hour_Format hourFormat;
     static STM32RTC::AM_PM period;
 
@@ -24,6 +29,9 @@ class realTimeClock
     void updateTime();
     void setLightOn();
     void setLightOff();
+    void turnOnLedRelay_2(char* realtime);
+    void turnOffLedRelay_2(char* realtime);
+    void pumpRelayOnandOffInterval();
     void setHoursOrMinute(char time_nature);
     void dayNightIndicator();
 };

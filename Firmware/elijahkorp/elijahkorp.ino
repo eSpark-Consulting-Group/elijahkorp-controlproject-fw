@@ -34,7 +34,7 @@ void loop()
   switch(button.set())
   {
     case 0 :
-       {
+       { 
         Serial.println("Hour");
         rtc.setHoursOrMinute('H');
         break;
@@ -49,7 +49,7 @@ void loop()
       {
        Serial.println("AM/PM Selection");
        rtc.dayNightIndicator();
-       rtc.updateTime(); 
+       rtc.updateTime(); // updating the real time variables  
        if(button.set() == 3)
        {
         button.hourCount = 0;
@@ -112,11 +112,13 @@ void loop()
       {
        Serial.println("AM/PM Selection");
        rtc.dayNightIndicator();
-       rtc.setLightOff();  
+       rtc.setLightOff(); 
+       rtc.setUp(); //Real time start now 
+        
        break;
       }     
     default:
-       { 
+       {
         rtc.loop(); 
         // Serial.println("Done");
         Serial.println(rtc.lightOntime);

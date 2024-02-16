@@ -12,6 +12,16 @@
 
 #define SET_BUTTON PB10      // latch 3
 #define SET_BUTTON_LED PB11  // led
+
+#define LIGHT_BUTTON PB12      // latch 3
+#define LIGHT_BUTTON_LED PB13  // led
+
+#define PUMP_BUTTON PB14      // latch 3
+#define PUMP_BUTTON_LED PB15  // led
+
+#define RELAY_1 PA0     // latch 3
+#define RELAY_2 PA1      // latch 3
+
 // namespace set
 // {
 //   typedef enum
@@ -37,6 +47,7 @@ class Button
     Button();
     void positive(char time_nature);
     void negative(char time_nature); 
+    bool isSetButtonPressed();
     int set(); 
 };
 extern SURENOO Surenoo;
