@@ -6,13 +6,15 @@
 class realTimeClock
 {
   public:
-    char amPmDayNight[3];
+    char amPmDayNight[3] = "XX";
+    char buf[10];
     char realtime[50];
     char lightOntime[50];
     char lightOfftime[50];
+    int limit = 0;
+    int row = 1, col = 0;
     byte realTimeMinutes = 0;
     byte realTimehours = 0;
-    
     byte realSeconds = 0;
     byte seconds = 0;
     byte minutes = 0;
@@ -32,6 +34,6 @@ class realTimeClock
     void turnOnLedRelay_2(char* realtime);
     void turnOffLedRelay_2(char* realtime);
     void pumpRelayOnandOffInterval(uint8_t sec);
-    void setHoursOrMinute(char time_nature);
-    void dayNightIndicator();
+    void setHoursOrMinute(char time_nature, int count);
+    void dayNightIndicator(int count);
 };

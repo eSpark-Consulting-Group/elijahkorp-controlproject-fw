@@ -155,10 +155,9 @@ const char* realTimeClock::periodToString(STM32RTC::AM_PM period)
     }
 }
 
-void realTimeClock::setHoursOrMinute(char time_nature) 
+void realTimeClock::setHoursOrMinute(char time_nature, int count) 
 {
-  int limit = 0;
-  int row = 1, col = 0;
+  
   if (time_nature == 'H') 
   {
     col = 1;
@@ -183,23 +182,47 @@ void realTimeClock::setHoursOrMinute(char time_nature)
   Serial.println(time_nature);
   if ((button.hourCount <= 9 && button.hourCount >= 0) && time_nature == 'H') 
   {
-    Surenoo.setCursorlcd(col, 1);
-    Surenoo.print(button.hourCount);
+    sprintf(buf, "%d", button.hourCount);
+    surenooLed.blinkText(buf, col, 1);
+    if(button.set() == count)
+    {
+       Surenoo.setCursorlcd(col, 1);
+      Surenoo.print(button.hourCount);
+    }
+    // Surenoo.setCursorlcd(col, 1);
+    // Surenoo.print(button.hourCount);
   } 
   else if (button.hourCount > 9 && time_nature == 'H') 
   {
-    Surenoo.setCursorlcd(col - 1, 1);
-    Surenoo.print(button.hourCount);
+    sprintf(buf, "%d", button.hourCount);
+    col -= 1 ;
+    surenooLed.blinkText(buf, col, 1);
+    if(button.set() == count)
+    {
+       Surenoo.setCursorlcd(col, 1);
+      Surenoo.print(button.hourCount);
+    }
   }
   else if ((button.minuteCount <= 9 && button.minuteCount >= 0) && time_nature == 'M') 
   {
-    Surenoo.setCursorlcd(col, 1);
-    Surenoo.print(button.minuteCount);
+    sprintf(buf, "%d", button.minuteCount);
+    surenooLed.blinkText(buf, col, 1);
+    if(button.set() == count)
+    {
+       Surenoo.setCursorlcd(col, 1);
+      Surenoo.print(button.minuteCount);
+    }
   }  
   else if (button.minuteCount > 9 && time_nature == 'M') 
   {
-    Surenoo.setCursorlcd(col - 1, 1);
-    Surenoo.print(button.minuteCount);
+    sprintf(buf, "%d", button.minuteCount);
+    col -= 1 ;
+    surenooLed.blinkText(buf, col, 1);
+    if(button.set() == count)
+    {
+       Surenoo.setCursorlcd(col, 1);
+       Surenoo.print(button.minuteCount);
+    }
   }  
   else 
   {
@@ -207,31 +230,40 @@ void realTimeClock::setHoursOrMinute(char time_nature)
   }
 }
 
-void realTimeClock::dayNightIndicator()
+void realTimeClock::dayNightIndicator(int count)
 {
   if (digitalRead(POSITIVE_BUTTON) == LOW) 
   {
     strcpy(amPmDayNight, "AM");
-    Surenoo.setCursorlcd(6, 1);
-    Surenoo.print("AM");
-    digitalWrite(POSITIVE_BUTTON_LED, LOW);  // Turn off LED
+    
+    if(button.set() == count)
+    {
+       Surenoo.setCursorlcd(6, 1);
+       Surenoo.print("AM");
+    }
+    digitalWrite(POSITIVE_BUTTON_LED, LOW);  // Turn oN LED
   } 
   else 
   {
-    digitalWrite(POSITIVE_BUTTON_LED, HIGH);  // Turn on LED
+    digitalWrite(POSITIVE_BUTTON_LED, HIGH);  // Turn oFF LED
   }
 
   if (digitalRead(NEGATIVE_BUTTON) == LOW) 
   {
     strcpy(amPmDayNight, "PM");
-    Surenoo.setCursorlcd(6, 1);
-    Surenoo.print("PM");
-    digitalWrite(NEGATIVE_BUTTON_LED, LOW);  // Turn off LED
+    // surenooLed.blinkText("PM", 6, 1);
+    if(button.set() == count)
+    {
+       Surenoo.setCursorlcd(6, 1);
+       Surenoo.print("PM");
+    }
+    digitalWrite(NEGATIVE_BUTTON_LED, LOW);  // Turn oN LED
   } 
   else 
   {
-    digitalWrite(NEGATIVE_BUTTON_LED, HIGH);  // Turn on LED
+    digitalWrite(NEGATIVE_BUTTON_LED, HIGH);  // Turn oFF LED
   }
+  surenooLed.blinkText(amPmDayNight, 6, 1);
 
 }
 

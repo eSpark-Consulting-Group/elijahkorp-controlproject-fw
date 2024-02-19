@@ -1,8 +1,7 @@
 #pragma onces
 
-#include <Arduino.h>
-#include <Surenoo.h>
-#include <Wire.h>
+#include"LCD.hpp"
+
 
 #define POSITIVE_BUTTON PB3      // latch 1
 #define POSITIVE_BUTTON_LED PB4  // led
@@ -52,5 +51,5 @@ class Button
     bool isSetButtonPressed();
     int set(); 
 };
-extern SURENOO Surenoo;
+
 extern Button button; 
