@@ -27,6 +27,9 @@ Button::Button()
 
   pinMode(RELAY_1, OUTPUT);
   pinMode(RELAY_2, OUTPUT);
+
+  digitalWrite(LIGHT_BUTTON_LED, HIGH);
+  digitalWrite(PUMP_BUTTON_LED, HIGH);
 }
 
 void Button::positive(char time_nature) 
@@ -118,13 +121,35 @@ void Button::negative(char time_nature)
         return;
       }
     }
-    digitalWrite(NEGATIVE_BUTTON_LED, LOW);  // Turn off LED
+    digitalWrite(NEGATIVE_BUTTON_LED, LOW);  // Turn oN LED
   } 
   else 
   {
-    
-    
-    digitalWrite(NEGATIVE_BUTTON_LED, HIGH);  // Turn on Button- LED
+    digitalWrite(NEGATIVE_BUTTON_LED, HIGH);  // Turn oFF Button- LED
+  }
+}
+
+void Button::lightOverRide()
+{
+  if (digitalRead(LIGHT_BUTTON) == LOW) 
+  {
+    digitalWrite(LIGHT_BUTTON_LED, LOW);  // Turn oNN Button- LED
+  }
+  else 
+  {
+    digitalWrite(LIGHT_BUTTON_LED, HIGH);  // Turn oFF Button- LED
+  }
+}
+
+void Button::pumpOverRide()
+{
+  if (digitalRead(PUMP_BUTTON) == LOW) 
+  {
+    digitalWrite(PUMP_BUTTON_LED, LOW);  // Turn oN Button- LED
+  }
+  else 
+  {
+    digitalWrite(PUMP_BUTTON_LED, HIGH);  // Turn oFF Button- LED
   }
 }
 
@@ -159,11 +184,11 @@ int Button::set()
     {
       setButtonCount ++;
     }
-    digitalWrite(SET_BUTTON_LED, LOW);  // Turn off LED
+    digitalWrite(SET_BUTTON_LED, LOW);  // Turn oN LED
   } 
   else 
   {
-    digitalWrite(SET_BUTTON_LED, HIGH);  // Turn on Set button LED
+    digitalWrite(SET_BUTTON_LED, HIGH);  // Turn oFF Set button LED
   }
   // for (int i=0 ;i <=setButtonCount ; i++)
   // {

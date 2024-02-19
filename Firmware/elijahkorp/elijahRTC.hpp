@@ -31,7 +31,7 @@ class realTimeClock
     void setLightOff();
     void turnOnLedRelay_2(char* realtime);
     void turnOffLedRelay_2(char* realtime);
-    void pumpRelayOnandOffInterval();
+    void pumpRelayOnandOffInterval(uint8_t sec);
     void setHoursOrMinute(char time_nature);
     void dayNightIndicator();
 };

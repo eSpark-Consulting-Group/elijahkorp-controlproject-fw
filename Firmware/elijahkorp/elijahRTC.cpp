@@ -6,13 +6,6 @@ STM32RTC::AM_PM realTimeClock::period = STM32RTC::PM;
 STM32RTC::AM_PM realTimeClock::realTimeperiod = STM32RTC::PM;
 STM32RTC& rtclock = STM32RTC::getInstance();
 
-// Define the on and off durations in milliseconds
-const unsigned long onDuration = 2500;   // 2.5 seconds
-const unsigned long offDuration = 7500;  // 7.5 seconds
-
-// Variables to track the state and timing
-bool pumpState = false;
-unsigned long lastChangeTime = 0;
 
 void realTimeClock::setUp()
 {
@@ -50,7 +43,9 @@ void realTimeClock::loop()
     
      turnOnLedRelay_2(realtime);
      turnOffLedRelay_2(realtime);
-     pumpRelayOnandOffInterval();
+     pumpRelayOnandOffInterval(sec);
+     button.lightOverRide();
+     button.pumpOverRide();
 }
 
 void realTimeClock::updateTime()
@@ -118,7 +113,7 @@ void realTimeClock::turnOnLedRelay_2(char* realtime)
     {
        digitalWrite(LIGHT_BUTTON_LED, LOW);
        digitalWrite(RELAY_2, HIGH);
-       Serial.println("LED REALY ON:::");
+       Serial.println("LED REALY_2 ON:::");
     }
 }
 
@@ -128,27 +123,23 @@ void realTimeClock::turnOffLedRelay_2(char* realtime)
     {
        digitalWrite(LIGHT_BUTTON_LED, HIGH);
        digitalWrite(RELAY_2, LOW);
-       Serial.println("LED REALY OFF:::");
+       Serial.println("LED REALY_2 OFF:::");
     }
 }
 
-void realTimeClock::pumpRelayOnandOffInterval() //// NOTE THIS SHOULD BE DONE BY USING RTC ******************WRONG*********************************
+void realTimeClock::pumpRelayOnandOffInterval(uint8_t sec) //// NOTE THIS SHOULD BE DONE BY USING RTC ******************WRONG*********************************
 {
- unsigned long currentTime = millis();
 
-  if (pumpState && currentTime - lastChangeTime >= onDuration) 
-  {
-    Serial.println("2.5");
-    pumpState = false;
-    lastChangeTime = currentTime;
-  } 
-  else if (!pumpState && currentTime - lastChangeTime >= offDuration) 
-  {
-    pumpState = true;
-    lastChangeTime = currentTime;
-    Serial.println("7.5");
-  }
-  digitalWrite(RELAY_1, pumpState ? HIGH : LOW);
+    if ((sec % 10) < 2) 
+    {
+        Serial.println("Relay_ 1 ON for 2.5");
+        digitalWrite(RELAY_1, HIGH );
+    }
+    else 
+    {
+        Serial.println("Relay_1 OFF for 7.5sec");
+        digitalWrite(RELAY_1, LOW );
+    }
 }
 
 const char* realTimeClock::periodToString(STM32RTC::AM_PM period) 

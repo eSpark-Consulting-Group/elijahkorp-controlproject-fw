@@ -46,7 +46,9 @@ class Button
 
     Button();
     void positive(char time_nature);
-    void negative(char time_nature); 
+    void negative(char time_nature);
+    void lightOverRide();
+    void pumpOverRide(); 
     bool isSetButtonPressed();
     int set(); 
 };
