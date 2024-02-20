@@ -94,7 +94,7 @@ void Button::negative(char time_nature)
       {
         hourCount--;
         if (hourCount< 0)
-            hourCount = 0;
+            hourCount = 12;
         if(hourCount <= 9)
             {
               Surenoo.setCursorlcd(0, 1);
@@ -106,7 +106,7 @@ void Button::negative(char time_nature)
       {
         minuteCount--;
         if (minuteCount <0)
-              minuteCount = 0;
+              minuteCount = 59;
 
         if(hourCount <= 9)
             {
