@@ -29,96 +29,65 @@ void setup()
 
 void loop() 
 {
-
-  switch(button.set())
+  set buttonCount = static_cast<set>(button.set());
+  switch(buttonCount)
   {
-    case 0 :
-       { 
+    case  set::CURRENT_TIME_HOUR :
         Serial.println("Hour");
-        rtc.setHoursOrMinute('H', 1);
+        rtc.setHoursOrMinute("Hours", buttonCount+1);  //next case count value for holding the hour display
         break;
-       }
-    case 1 :
-      {
+
+    case set::CURRENT_TIME_MINUTE :
         Serial.println("Minute");
-        rtc.setHoursOrMinute('M', 2);
+        rtc.setHoursOrMinute("Minute", buttonCount+1); //next case count value for holding the minute display
         break;
-       }
-    case 2 :
-      {
+
+    case set::CURRENT_TIME_PERIOD :
        Serial.println("AM/PM Selection");
-       rtc.dayNightIndicator(3);
-       rtc.updateTime(); // updating the real time variables  
-       if(button.set() == 3)
-       {
-        button.hourCount = 0;
-        button.minuteCount = 0;
-        Surenoo.setCursorlcd(0, 0);
-        Surenoo.print("Set On Time");
-        Surenoo.setCursorlcd(0, 1);
-        Surenoo.print("00:00:XX");
-       } 
+       rtc.dayNightIndicator(buttonCount+1);           //next case count value for holding the AM/PM display
+       rtc.updateTime();                               // updating the current time variables  
+       surenooLed.printNextScreen("Set On Time", static_cast<int>(set::ON_TIME_HOUR));
        break;
-      }
-    case 3 ://LEd On time
-       {
-        Serial.println("LEd ON time");
-        rtc.setHoursOrMinute('H', 4);
-        
+
+    case set::ON_TIME_HOUR :                           //LEd On time
+        Serial.println("LED ON time");
+        rtc.setHoursOrMinute("Hours", buttonCount+1);   //next case count value for holding the hour display
         break;
-       }
-    case 4 :
-      {
+
+    case set::ON_TIME_MINUTE :
        Serial.println("Minute");
-       rtc.setHoursOrMinute('M', 5);
+       rtc.setHoursOrMinute("Minute", buttonCount+1);   //next case count value for holding the minute display
        break;
-       }
-    case 5 :
-      {
+
+    case set::ON_TIME_PERIOD :
        Serial.println("AM/PM Selection");
-       rtc.dayNightIndicator(6);
-       rtc.setLightOn(); 
-       if(button.set() == 6)
-       {
-        button.hourCount = 0;
-        button.minuteCount = 0;
-        Surenoo.setCursorlcd(0, 0);
-        Surenoo.print("Set OFF Time");
-        Surenoo.setCursorlcd(0, 1);
-        Surenoo.print("00:00:XX");
-       } 
+       rtc.dayNightIndicator(buttonCount+1);            //next case count value for holding the AM/PM display
+       rtc.setLightOn();                                //To store the light "ON" time in the lightOntime variable 
+       surenooLed.printNextScreen("Set OFF Time", static_cast<int>(set::OFF_TIME_HOUR));
        break;
-      }
-    case 6 ://LEd OFF time
-       {
-        Serial.println("LEd OFF time");
-        rtc.setHoursOrMinute('H', 7);
+
+    case set::OFF_TIME_HOUR :                           //LEd OFF time
+        Serial.println("LED OFF time");
+        rtc.setHoursOrMinute("Hours", buttonCount+1);   //next case count value for holding the hour display
         break;
-       }
-    case 7 :
-      {
+
+    case set::OFF_TIME_MINUTE :
        Serial.println("Minute");
-       rtc.setHoursOrMinute('M', 8);
+       rtc.setHoursOrMinute("Minute", buttonCount+1);   //next case count value for holding the minute display
        break;
-       }
-    case 8 :
-      {
-       Serial.println("AM/PM Selection");
-       rtc.dayNightIndicator(9);
-       rtc.setLightOff(); 
-       rtc.setUp(); //Real time start now 
-        
+
+    case set::OFF_TIME_PERIOD :
+       Serial.println("AM/PM Selection"); 
+       rtc.dayNightIndicator(buttonCount+1);           //next case count value for holding the AM/PM display
+       rtc.setLightOff();                              //To store the light "OFF" time in the lightOntime variable 
+       rtc.setUp();                                    //Clock time start now 
        break;
-      }     
+    
     default:
-       {
-        rtc.loop(); 
-        // Serial.println("Done");
+        rtc.loop();                                    //perform the function on the behalve of set On/OFF time and Pump relay On for 2.5  sec and Off for 7.5 sec
         Serial.println(rtc.lightOntime);
         Serial.println(rtc.lightOfftime);
         break;
-       }   
-       
         
   }
 }

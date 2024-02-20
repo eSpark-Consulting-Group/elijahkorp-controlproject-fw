@@ -21,21 +21,20 @@
 #define RELAY_1 PA0     // latch 3
 #define RELAY_2 PA1      // latch 3
 
-// namespace set
-// {
-//   typedef enum
-//   {
-//     realTimeHour=0,
-//     realTimeMinute,
-//     realTimePeriod,
-//     ledOnTimeHour,
-//     ledOnTimeMinute,
-//     ledOnTimePeriod,
-//     ledOffTimeHour,
-//     ledOffTimeMinute,
-//     ledOffTimePeriod,
-//   }setButton;
-// }
+
+typedef enum
+  {
+    CURRENT_TIME_HOUR = 0,
+    CURRENT_TIME_MINUTE,
+    CURRENT_TIME_PERIOD,
+    ON_TIME_HOUR,
+    ON_TIME_MINUTE,
+    ON_TIME_PERIOD,
+    OFF_TIME_HOUR,
+    OFF_TIME_MINUTE,
+    OFF_TIME_PERIOD,
+}set;
+
 class Button
 {
   public:
@@ -44,10 +43,14 @@ class Button
     static int setButtonCount; 
 
     Button();
-    void positive(char time_nature);
-    void negative(char time_nature);
+    void positive(const char* time_nature);
+    void negative(const char* time_nature);
     void lightOverRide();
-    void pumpOverRide(); 
+    void pumpOverRide();
+    bool isHourCountLessThanNine(); 
+    bool isHourCountGreaterThanNine();
+    bool isMinuteCountLessThanNine();
+    bool isMinuteCountGreaterThanNine();
     bool isSetButtonPressed();
     int set(); 
 };

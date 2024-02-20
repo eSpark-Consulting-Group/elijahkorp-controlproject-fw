@@ -32,14 +32,14 @@ Button::Button()
   digitalWrite(PUMP_BUTTON_LED, HIGH);
 }
 
-void Button::positive(char time_nature) 
+void Button::positive(const char* time_nature) 
 {
   if (digitalRead(POSITIVE_BUTTON) == LOW) 
   {
     // Increment the count only if the button was not pressed previously (latching action)
     if (digitalRead(POSITIVE_BUTTON_LED) == HIGH) 
     {
-      if (time_nature == 'H')
+      if (time_nature == "Hours")
       {
         hourCount++;
         Serial.println("Hour incremented");
@@ -50,14 +50,9 @@ void Button::positive(char time_nature)
             Surenoo.setCursorlcd(0, 1);
             Surenoo.print(0);
           }
-          // if (isSetButtonPressed())
-          //   {
-          //     Serial.println("++++++++++++++++++++++++++++++++++++++++++");
-          //     digitalWrite(SET_BUTTON_LED, LOW);  // Turn on Set button LED
-          //   } 
         
       }
-      else if (time_nature == 'M')
+      else if (time_nature == "Minute")
       {
         minuteCount++;
         if (minuteCount > 60)
@@ -83,14 +78,14 @@ void Button::positive(char time_nature)
   }
 }
 
-void Button::negative(char time_nature) 
+void Button::negative(const char* time_nature) 
 {
   if (digitalRead(NEGATIVE_BUTTON) == LOW) 
   {
     // decrement the count only if the button was not pressed previously (latching action)
     if (digitalRead(NEGATIVE_BUTTON_LED) == HIGH) 
     {
-      if (time_nature == 'H')
+      if (time_nature == "Hours")
       {
         hourCount--;
         if (hourCount< 0)
@@ -100,9 +95,9 @@ void Button::negative(char time_nature)
               Surenoo.setCursorlcd(0, 1);
               Surenoo.print("0");
             }    
-        Serial.println("Hour incremented");
+        Serial.println("Hour decremented");
       }
-      else if (time_nature == 'M')
+      else if (time_nature == "Minute")
       {
         minuteCount--;
         if (minuteCount <0)
@@ -113,7 +108,7 @@ void Button::negative(char time_nature)
               Surenoo.setCursorlcd(3, 1);
               Surenoo.print("0");
             }   
-        Serial.println("Minute incremented");
+        Serial.println("Minute decremented");
       }
       else
       {
@@ -151,6 +146,26 @@ void Button::pumpOverRide()
   {
     digitalWrite(PUMP_BUTTON_LED, HIGH);  // Turn oFF Button- LED
   }
+}
+
+bool Button::isHourCountLessThanNine()
+{
+  return button.hourCount <= 9 && button.hourCount >= 0;
+}
+
+bool Button::isHourCountGreaterThanNine()
+{
+  return button.hourCount > 9;
+}
+
+bool Button::isMinuteCountLessThanNine()
+{
+  return button.minuteCount <= 9 && button.minuteCount >= 0;
+}
+
+bool Button::isMinuteCountGreaterThanNine()
+{
+  return button.minuteCount > 9;
 }
 
 bool Button::isSetButtonPressed() 

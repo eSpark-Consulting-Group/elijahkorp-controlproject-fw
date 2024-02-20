@@ -4,8 +4,7 @@
 #include <Surenoo.h>
 #include <Wire.h>
 
-#define Blink_interval  500            // Set at top of source code file
-extern SURENOO Surenoo;
+#define Blink_interval  450  
 
 class SURENOOLED
 {
@@ -15,6 +14,9 @@ class SURENOOLED
   int i = 0;
 
   public:
-  void blinkText(char* msgtxt, int col, int row);
+  void blinkText(char* message, int col, int row);
+  void printHold(uint8_t count, char* message, uint8_t col, uint8_t row = 1);
+  void printNextScreen(char* message, int count, int col_1 = 0, int row_1 = 0, int col_2 = 0, int row_2 = 1);
 };
 extern SURENOOLED surenooLed;
+extern SURENOO Surenoo;
